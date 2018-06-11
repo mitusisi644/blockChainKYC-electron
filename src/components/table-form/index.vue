@@ -69,23 +69,30 @@
         var financeAddData = {};
         for(var item in this.itemGS){
             var vals = this.eval(this.itemGS[item]['js']);
-            if(vals){            
+            if(vals){
               subResu.push((vals)+"");
               financeAddData[item] = vals;
             }
         }
-        if(subResu.length > 0 && financeAddData.length > 0){
+        if(subResu.length > 0){
           //表格数据动态添加
-          financeAddData.tableDate = 2018;
+          financeAddData.tableDate = "包钢股份";
           this.itemData.push(financeAddData);
           //左侧数据动态添加
-          localStorage.transitionData = '{"timestamp": Date.parse(new Date())+"000000", "hash": "0x91ab72c238f5c5ed7ca2a43be245e358ff2bc2168e92e9ce8d7fd4395c80f254","from": "0xed9d02e382b34818e88b88a309c7fe71e65f419d", "to": "0x29d368dcb94c5cc18800bde6473a2c6d23f3dc3f", "value": "1","v": "27"}';
+          var _hash = Math.random().toString(36).substr(2)+
+                      Math.random().toString(36).substr(2)+
+                      Math.random().toString(36).substr(2)+
+                      Math.random().toString(36).substr(2)+
+                      Math.random().toString(36).substr(2)+
+                      Math.random().toString(36).substr(2);
+          var _today =  Date.parse(new Date())+"000000";
+          localStorage.transitionData = '{"timestamp": "'+_today+'", "hash": "'+_hash+'","from": "0xed9d02e382b34818e88b88a309c7fe71e65f419d", "to": "0x29d368dcb94c5cc18800bde6473a2c6d23f3dc3f", "value": "1","v": "27"}';
+        }
 
-          //提交完成：
-          this.itemAddBtn = false;
-          for(var s in this.itemTitle){
-            this.itemTitle[s]['val'] = 0;
-          }
+        //提交完成：
+        this.itemAddBtn = false;
+        for(var s in this.itemTitle){
+          this.itemTitle[s]['val'] = 0;
         }
 
         /*this.$axios(promiseBaseUrl, JSON.stringify(subResu), function(){
@@ -99,15 +106,16 @@
       },
       SetAutoComplete:function(){
         for(var s in this.itemTitle){
-            this.itemTitle[s]['val'] = 2;
+            this.itemTitle[s]['val'] = this.itemTitle[s]['test'];
           }
       }
+    },
+    created:function(){
     }
   }
 </script>
 
 <style scoped>
-.lss-auto-complete { width: 100px; height: 200px; background:none; position: absolute;right:0px; top:0px; }
   .line-fg {width: 100%; height: 2px;
     overflow: hidden;
     background:#0c91e5;
@@ -166,5 +174,5 @@
   .lss-bg-seashell {background: seashell;}
   .lss-bg-navy {background: navy;}
   .lss-bg-tan {background: tan;}
-  
+
 </style>

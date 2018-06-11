@@ -1,7 +1,8 @@
 <template>
-    <div class="tab-con">
+    <div class="lss-tab-con">
       <div class="lss-market-warp">
         <NavTag :title="'行业状况'"></NavTag>
+        <div class="lss-clear"></div>
         <div :class="item.data[1]>0 ? 'lmw-item zhang-item' : 'lmw-item die-item'" v-for="(item,index) in qihuo" @click="showCharts(index)">
           <p class="lmw-title">
             <span>{{item.name}}【{{item.kId}}】</span>
@@ -30,62 +31,36 @@
             <Charts :chart-title="defaultQihuoZS.title" :k-id="defaultQihuoZS.kId"></Charts>
           </div>
           <h2 class="index-item-title">{{defaultQihuoZS.title}}加权指数</h2>
-          <i-col span="11" class="index-item">
+          <i-col span="24" class="index-item">
             <div class="index-item-con">
               <p>
-                <span>买入</span>
-                <span class="progress-tab"><a class="status-g">Green</a></span>
+                <span>行业测评</span>
+                <span class="progress-tab"><a class="status-g">上升</a></span>
+                <span class="quanzhan-bfb">权占%：&nbsp;{{(defaultQihuoZS.newPrice*(Number(quanzhong.PC)+20)/100).toFixed(2)}}</span>
+                <span class="add-quan">
+                  加权：&nbsp;<Input-number :min="0" :value="0" v-model="quanzhong.PC"></Input-number>
+                  <i-button type="primary" size="small" @click="addQuanPHZ()">确定</i-button>
+                </span>
               </p>
               <p>
-                <span>卖出</span>
-                <span class="progress-tab"><a class="status-r">red</a></span>
+                <span>行业指数</span>
+                <span class="progress-tab"><a class="status-r">下降</a></span>
+                <span class="quanzhan-bfb">权占%：&nbsp;{{(defaultQihuoZS.newPrice*(Number(quanzhong.HY)+25)/100).toFixed(2)}}</span>
+                <span class="add-quan">
+                  加权：&nbsp;<Input-number :min="0" :value="0" v-model="quanzhong.HY"></Input-number>
+                  <i-button type="primary" size="small" @click="addQuanPHZ()">确定</i-button>
+                </span>
               </p>
               <p>
-                <span>卖出</span>
-                <span class="progress-tab"><a class="status-r">red</a></span>
+                <span>资产风险</span>
+                <span class="progress-tab"><a class="status-y">持平</a></span>
+                <span class="quanzhan-bfb">权占%：&nbsp;{{(defaultQihuoZS.newPrice*(Number(quanzhong.ZJ)+33)/100).toFixed(2)}}</span>
+                <span class="add-quan">
+                  加权：&nbsp;<Input-number :min="0" :value="0" v-model="quanzhong.ZJ"></Input-number>
+                  <i-button type="primary" size="small" @click="addQuanPHZ()">确定</i-button>
+                </span>
               </p>
             </div>
-          </i-col>
-          <i-col span="11" offset="2" class="index-item">
-            <i-form :label-width="50">
-              <Form-item
-                label="加权" >
-                <Row>
-                  <i-col span="18">
-                    <i-input type="text" placeholder="请输入..."></i-input>
-                  </i-col>
-                  <i-col span="4" offset="1">
-                    <i-button type="primary" size="small">确认</i-button>
-                  </i-col>
-                </Row>
-              </Form-item>
-            </i-form>
-            <i-form  :label-width="50">
-              <Form-item
-                label="加权" >
-                <Row>
-                  <i-col span="18">
-                    <i-input type="text" placeholder="请输入..."></i-input>
-                  </i-col>
-                  <i-col span="4" offset="1">
-                    <i-button type="primary" size="small">确认</i-button>
-                  </i-col>
-                </Row>
-              </Form-item>
-            </i-form>
-            <i-form  :label-width="50">
-              <Form-item
-                label="加权" >
-                <Row>
-                  <i-col span="18">
-                    <i-input type="text" placeholder="请输入..."></i-input>
-                  </i-col>
-                  <i-col span="4" offset="1">
-                    <i-button type="primary" size="small">确认</i-button>
-                  </i-col>
-                </Row>
-              </Form-item>
-            </i-form>
           </i-col>
         </Row>
       </div>
@@ -134,36 +109,22 @@
       data(){
         return {
           todyJson:"",
+          quanzhong:{
+            "PC":0,
+            "HY":0,
+            "ZJ":0
+          },
           defaultQihuoZS:{
-              "title":"LME铝",
-              "kId":"AHD"
+              "title":"木材",
+              "kId":"AHD",
+              "newPrice":0
           },
           beginTime:'2018/1/1',
           //qihuos:["AHD","CAD","S","W","C","NG","CL","SI","GC","OIL","XPD"],
           qihuo: [
             {
               "kId":"AHD",
-              "name":"LME铝",
-              "data":[]
-            },
-            {
-              "kId":"CAD",
-              "name":"LME铜",
-              "data":[]
-            },
-            {
-              "kId":"S",
-              "name":"CBOT黄豆",
-              "data":[]
-            },
-            {
-              "kId":"W",
-              "name":"CBOT小麦",
-              "data":[]
-            },
-            {
-              "kId":"C",
-              "name":"CBOT玉米",
+              "name":"木材",
               "data":[]
             },
             {
@@ -173,27 +134,12 @@
             },
             {
               "kId":"CL",
-              "name":"NYMEX原油",
-              "data":[]
-            },
-            {
-              "kId":"SI",
-              "name":"COMEX白银",
+              "name":"原油",
               "data":[]
             },
             {
               "kId":"GC",
-              "name":"COMEX黄金",
-              "data":[]
-            },
-            {
-              "kId":"OIL",
-              "name":"布伦特原油",
-              "data":[]
-            },
-            {
-              "kId":"XPD",
-              "name":"伦敦钯金",
+              "name":"黄金",
               "data":[]
             }
           ]
@@ -221,16 +167,35 @@
           showCharts: function(_index){
             this.defaultQihuoZS.title =  this.qihuo[_index]['name'];
             this.defaultQihuoZS.kId =  this.qihuo[_index]['kId'];
+            this.defaultQihuoZS.newPrice =  this.qihuo[_index]["data"][0];
+            this.quanzhong = {
+              "PC":0,
+              "HY":0,
+              "ZJ":0
+            };
+          },
+          addQuanPHZ: function(){
+            var _hash = Math.random().toString(36).substr(2)+
+                        Math.random().toString(36).substr(2)+
+                        Math.random().toString(36).substr(2)+
+                        Math.random().toString(36).substr(2)+
+                        Math.random().toString(36).substr(2)+
+                        Math.random().toString(36).substr(2);
+            var _today =  Date.parse(new Date())+"000000";
+            localStorage.transitionData = '{"timestamp":"'+_today+'", "hash": "0x'+_hash+'","from": "0xed9d02e382b34818e88b88a309c7fe71e65f419d", "to": "0x29d368dcb94c5cc18800bde6473a2c6d23f3dc3f", "value": "1","v": "27"}';
           }
       }
     }
 </script>
 <style scoped>
+  .lss-clear {
+    clear: both;}
   .lss-market-warp {
-    width:100%; height: auto; overflow: hidden; padding:20px 10px 20px 20px;
+    width:100%; height: auto; overflow: hidden;
   }
   .lmw-item {
-    display: inline-block; width: 320px; margin-right:10px; margin-bottom: 10px; height: auto; overflow: hidden; position: relative;
+    display: inline-block; width: 24%; margin-right:0.5%;margin-left:0.5%; margin-bottom: 8px; height: auto; overflow: hidden;
+    position: relative; float:left;
     border:1px solid #ccc; padding:10px; border-bottom-width: 6px; border-radius: 4px; cursor:pointer;
   }
   .zhang-item{ border-color:#19be6b; }
@@ -268,9 +233,6 @@
     width:1px; height:100%; position: absolute; left: 50%; top:0px; background: #ccc;
   }
   .lmw-item .lmw-data a {float: right; color:green}
-  .industry-item{
-    padding:20px;
-  }
   .industry-item h2 {
     text-align: left;
     font-size:24px;
@@ -286,7 +248,7 @@
   }
   .industry-item-con p>span,
   .index-item-con p>span{
-    display: inline-block; float:left;
+    display: inline-block; float:left; width: auto;
   }
   .industry-item-con p:last-child,.index-item-con p:last-child { border-bottom:none;}
   .industry-item-con p span:nth-child(1){
@@ -297,15 +259,21 @@
   }
 
   .index-item-con p span:nth-child(1) {
-    width: 40%; font-size:14px;height: 38px; line-height: 38px;
+    min-width: 10%; font-size:14px;height: 38px; line-height: 38px;
   }
+  .index-item-con p>span {
+    padding:0px 5%; border-right:1px solid #ccc;
+  }
+  .index-item-con p .quanzhan-bfb { font-weight: 600;}
   .index-item-con p .progress-tab {
-    min-width: 55%;font-size:12px; color:#fff;height: 38px;
+    font-size:12px; height: 38px;
   }
   .index-item-con p .progress-tab a {
     display: inline-block;
-    width:auto; height:22px; line-height:22px; border-radius: 3px; color:#fff; padding:0px 8px;
+    width:auto; height:22px; line-height:22px; border-radius: 3px; color:#fff; padding:0px 8px; margin-right:10px;
   }
+  .index-item-con p .add-quan { font-weight: 600; border-right:none;}
+  .index-item-con p .add-quan button { margin-left:20px; }
   .index-item .ivu-form-item {margin-bottom:7px;}
   .status-g { background: #19be6b;}
   .status-y { background: #f90;}
@@ -314,7 +282,7 @@
   .index-table {
     width:100%;
     height: auto;
-    overflow: hidden; padding:0px 20px;
+    overflow: hidden;
   }
   .index-table-title {width:100%; height:60px; padding:9px 15px; background:#0c91e5; color:#fff; border-top-left-radius:5px; border-top-right-radius:5px;}
   .index-table>.ivu-row {
